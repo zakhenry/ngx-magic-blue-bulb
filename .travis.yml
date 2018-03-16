@@ -1,0 +1,37 @@
+dist: trusty
+sudo: required
+node_js:
+   - node # will use latest node
+os:
+  - linux
+env:
+  global:
+    - DBUS_SESSION_BUS_ADDRESS=/dev/null
+    - DISPLAY=:99.0
+    - CHROME_BIN=chromium-browser
+
+before_script:
+  - sh -e /etc/init.d/xvfb start
+
+install:
+  - npm install
+script: # the build step
+   - npm run build
+   - npm run lint
+   - npm run test.ci
+   - npm run package
+
+notifications:
+  email: # only receive email when the build status changes (someone broke the build!)
+    on_failure: change
+    on_success: change
+
+cache:  directories:
+    - ~/.npm
+
+after_success:
+  - cd dist && npm install && npm run travis-deploy-once "npm run semantic-release"
+
+branches:
+  except:
+    - /^v\d+\.\d+\.\d+$/
