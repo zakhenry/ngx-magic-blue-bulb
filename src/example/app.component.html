@@ -1,1 +1,8 @@
-<button (click)="connect()">Search</button>
+<button (click)="connect()">Connect</button>
+<br>
+<input [(colorPicker)]="color" (colorPickerChange)="selectedColor.next($event)" cpAlphaChannel="disabled" [style.background]="color"/>
+<br>
+<button (click)="disconnect()">Disconnect</button>
+<br>
+<button (click)="forgetDevice()">Forget Device</button>
+

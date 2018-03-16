@@ -14,23 +14,24 @@ before_script:
   - sh -e /etc/init.d/xvfb start
 
 install:
-  - npm install
+  - yarn install
 script: # the build step
-   - npm run build
-   - npm run lint
-   - npm run test.ci
-   - npm run package
+   - yarn run build
+   - yarn run lint
+   - yarn run test.ci
+   - yarn run package
 
 notifications:
   email: # only receive email when the build status changes (someone broke the build!)
     on_failure: change
     on_success: change
 
-cache:  directories:
+cache:
+  directories:
     - ~/.npm
 
 after_success:
-  - cd dist && npm install && npm run travis-deploy-once "npm run semantic-release"
+  - cd dist && yarn install && yarn run travis-deploy-once "yarn run semantic-release"
 
 branches:
   except:

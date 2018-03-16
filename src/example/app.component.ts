@@ -1,42 +1,44 @@
 import { Component } from '@angular/core';
-import {MagicBlueBulbService} from "../lib";
+import { MagicBlueBulbService } from '../lib';
+import {Subject} from 'rxjs/Subject';
+import {Subscription} from 'rxjs/Subscription';
 
 @Component({
   selector: 'app-root',
   templateUrl: './app.component.html',
-  styleUrls: ['./app.component.css']
+  styleUrls: ['./app.component.css'],
 })
 export class AppComponent {
-  title = 'app';
+  public color = '#ffffff';
+
+  public selectedColor: Subject<string> = new Subject<string>();
 
   constructor(private bulbService: MagicBlueBulbService) {}
 
+  private subscription: Subscription;
+
   connect() {
-    this.bulbService.connect().subscribe(server => {
-      console.log(`server`, server);
-
-        server.getPrimaryService(0xffe5)
-          .then(gattService => gattService.getCharacteristic(0xffe9))
-          .then(char => {
-
-
-            const arg = [0x56, 0x00, 0x00, 0xff, 0x00, 0xf0, 0xaa];
-            // 56 ff 08 5a 00 f0 aa
-
-            const buffer = new Uint8Array(arg);
-
-            char.writeValue(buffer);
-
-            console.log(`buffer written`, buffer);
-
-        })
-
-      // Characteristic number ffe9 in Service ffe5
-
-    },
- error => {
-      console.error(`error`, error);
-      });
+    this.disconnect();
+    this.subscription = this.bulbService.listen(this.selectedColor.asObservable()).subscribe(
+      color => {
+        console.log(`hexColor`, color);
+      },
+      error => {
+        console.error(`error`, error);
+      },
+      () => {
+        console.log(`complete`);
+      }
+    );
   }
 
+  disconnect() {
+    if (this.subscription) {
+      this.subscription.unsubscribe();
+    }
+  }
+
+  forgetDevice() {
+    this.bulbService.forgetDevice();
+  }
 }

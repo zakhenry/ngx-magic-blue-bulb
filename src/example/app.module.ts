@@ -1,9 +1,9 @@
 import { BrowserModule } from '@angular/platform-browser';
 import { NgModule } from '@angular/core';
 
-
 import { AppComponent } from './app.component';
-import {MagicBlueBulbModule} from "../lib/magic-blue-bulb.module";
+import {MagicBlueBulbModule} from '../lib/magic-blue-bulb.module';
+import {ColorPickerModule} from 'ngx-color-picker';
 
 
 @NgModule({
@@ -12,7 +12,8 @@ import {MagicBlueBulbModule} from "../lib/magic-blue-bulb.module";
   ],
   imports: [
     BrowserModule,
-    MagicBlueBulbModule
+    MagicBlueBulbModule,
+    ColorPickerModule
   ],
   providers: [],
   bootstrap: [AppComponent]
